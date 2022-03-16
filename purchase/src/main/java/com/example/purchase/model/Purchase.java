@@ -12,9 +12,6 @@ import java.time.ZonedDateTime;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Purchase extends BaseEntity implements Serializable {
-    @Enumerated(EnumType.STRING)
-    private PurchaseStatus purchaseStatus;
-
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 

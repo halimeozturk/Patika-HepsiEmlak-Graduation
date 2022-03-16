@@ -7,12 +7,14 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
 
 @Configuration
-public class WebSecurityConfig{
+public class WebSecurityConfig {
 
 	@Autowired
 	private JwtFilter filter;
@@ -50,7 +52,14 @@ public class WebSecurityConfig{
 								.and()
 								.path("/purchase/**")
 								.filters(f -> f.filter(filter)).uri("http://localhost:8088"))
+				.route("payment",
+						r -> r.method(HttpMethod.POST)
+								.and()
+								.path("/payment/**")
+								.filters(f -> f.filter(filter)).uri("http://localhost:8080"))
 				.build();
 	}
+
+
 
 }
