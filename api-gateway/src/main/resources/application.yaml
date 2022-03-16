@@ -1,0 +1,33 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: api-gateway
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8085/auth
+  cloud:
+    gateway:
+      routes:
+        - id: advert
+          uri: http://localhost:8086
+          predicates:
+            - Path=/adverts/**
+            - Method=POST
+        - id: user
+          uri: http://localhost:8085
+          predicates:
+            - Path=/users/**, /auth/**
+            - Method=POST
+
+#  main:
+#    allow-bean-definition-overriding: true
+#    web-application-type: reactive
+#
+#
+#logging:
+#  level:
+#    '[org.springframework.security]': TRACE
