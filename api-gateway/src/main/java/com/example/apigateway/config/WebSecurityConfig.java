@@ -40,15 +40,16 @@ public class WebSecurityConfig{
 						r -> r.path("/users/**")
 								.uri("http://localhost:8085"))
 				.route("advert",
-						r -> r.method(HttpMethod.POST)
+						r -> r.method(HttpMethod.POST,HttpMethod.GET)
 								.and()
 								.path(("/adverts/**"))
 								.filters(f -> f.filter(filter)).uri("http://localhost:8086"))
-				.route("advert",
-						r -> r.method(HttpMethod.GET)
+
+				.route("purchase",
+						r -> r.method(HttpMethod.GET,HttpMethod.POST)
 								.and()
-								.path("/adverts/**")
-								.filters(f -> f.filter(filter)).uri("http://localhost:8086"))
+								.path("/purchase/**")
+								.filters(f -> f.filter(filter)).uri("http://localhost:8088"))
 				.build();
 	}
 

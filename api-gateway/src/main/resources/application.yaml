@@ -22,7 +22,11 @@ spring:
           predicates:
             - Path=/users/**, /auth/**
             - Method=POST
-
+        - id: purchase
+          uri: http://localhost:8088
+          predicates:
+            - Path=/purchase/**
+            - Method=POST,GET,PUT
 #  main:
 #    allow-bean-definition-overriding: true
 #    web-application-type: reactive
