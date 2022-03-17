@@ -1,6 +1,5 @@
 package com.example.purchase.model;
 
-import com.example.purchase.enums.PurchaseStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

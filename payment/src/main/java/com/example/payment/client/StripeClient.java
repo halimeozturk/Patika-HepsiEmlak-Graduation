@@ -2,6 +2,7 @@ package com.example.payment.client;
 
 
 import com.example.payment.dto.EmailMessageDTO;
+import com.example.payment.dto.PurchaseDTO;
 import com.example.payment.enums.Currency;
 import com.example.payment.enums.PaymentStatus;
 import com.example.payment.exception.GenericServiceException;
@@ -31,21 +32,24 @@ public class StripeClient {
     private final PaymentRepository paymentRepository;
     private final PaymentLogRepository paymentLogRepository;
     private final QueueService queueService;
+    private final PurchaseClient purchaseClient;
+
     @Autowired
-    StripeClient(UserRepository userRepository, PaymentRepository paymentRepository, PaymentLogRepository paymentLogRepository, QueueService queueService) {
+    StripeClient(UserRepository userRepository, PaymentRepository paymentRepository, PaymentLogRepository paymentLogRepository, QueueService queueService, PurchaseClient purchaseClient) {
         this.userRepository = userRepository;
         this.paymentRepository = paymentRepository;
         this.paymentLogRepository = paymentLogRepository;
         this.queueService = queueService;
+        this.purchaseClient = purchaseClient;
         Stripe.apiKey = "sk_test_51KdhdHF64pjijg62TOiq6R0jHqThWZkbhwcASt7Uk9ccVyC0IpW7b7z7VojUy6IXaaJMh0s7aUO8FuRO3RNqBGkq00Yht38PKL";
     }
 
-    public Customer createCustomer(String token, String email) throws Exception {
-        Map<String, Object> customerParams = new HashMap<String, Object>();
-        customerParams.put("email", email);
-        customerParams.put("source", token);
-        return Customer.create(customerParams);
-    }
+//    public Customer createCustomer(String token, String email) throws Exception {
+//        Map<String, Object> customerParams = new HashMap<String, Object>();
+//        customerParams.put("email", email);
+//        customerParams.put("source", token);
+//        return Customer.create(customerParams);
+//    }
 
     private Customer getCustomer(String id) throws Exception {
         return Customer.retrieve(id);
@@ -89,6 +93,11 @@ public class StripeClient {
         payment.setAdvertPackage(advertPackage);
         payment = paymentRepository.save(payment);
         sendEmail(email,"Your Payment Has Been Done",payment);
+//        PurchaseDTO purchaseDTO = new PurchaseDTO();
+//        purchaseDTO.setPurchaseDate(ZonedDateTime.now());
+//        purchaseDTO.setAdvertPackageId(advertPackage.getId());
+//        purchaseDTO.setUserEmal();
+
 
         PaymentLog paymentLog = new PaymentLog();
         paymentLog.setPayment(payment);
@@ -116,15 +125,15 @@ public class StripeClient {
         paymentLogRepository.save(paymentLog);
     }
 
-    public Charge chargeCustomerCard(String customerId, int amount) throws Exception {
-        String sourceCard = getCustomer(customerId).getDefaultSource();
-        Map<String, Object> chargeParams = new HashMap<String, Object>();
-        chargeParams.put("amount", amount);
-        chargeParams.put("currency", "USD");
-        chargeParams.put("customer", customerId);
-        chargeParams.put("source", sourceCard);
-        Charge charge = Charge.create(chargeParams);
-        return charge;
-    }
+//    public Charge chargeCustomerCard(String customerId, int amount) throws Exception {
+//        String sourceCard = getCustomer(customerId).getDefaultSource();
+//        Map<String, Object> chargeParams = new HashMap<String, Object>();
+//        chargeParams.put("amount", amount);
+//        chargeParams.put("currency", "USD");
+//        chargeParams.put("customer", customerId);
+//        chargeParams.put("source", sourceCard);
+//        Charge charge = Charge.create(chargeParams);
+//        return charge;
+//    }
 
 }
