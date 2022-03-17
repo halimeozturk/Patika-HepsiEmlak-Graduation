@@ -33,8 +33,19 @@ public class UserController {
 //        return ResponseEntity.ok(userService.update(userDTO));
 //    }
 
-//    @GetMapping("/{id}")
-//    ResponseEntity<UserDTO> getUserById(@PathVariable Long id){
-//        return ResponseEntity.ok(userService.getUserById(id));
-//    }
+    @GetMapping("/{id}")
+    ResponseEntity<UserDTO> getUserById(@PathVariable Long id){
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @GetMapping("/{email}")
+    ResponseEntity<UserDTO> getUserById(@PathVariable String email){
+        return ResponseEntity.ok(userService.getUserByEmail(email));
+    }
+
+
+    @GetMapping("/exists/{id}")
+    boolean existsUser(@PathVariable Long id){
+        return userService.existsUser(id);
+    }
 }

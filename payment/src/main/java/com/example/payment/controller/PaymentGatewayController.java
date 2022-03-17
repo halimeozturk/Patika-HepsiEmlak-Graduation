@@ -18,8 +18,16 @@ public class PaymentGatewayController {
     }
 
     @PostMapping
-    public void chargeCard(@RequestHeader(value="token") String token, @RequestHeader(value="amount") double amount,@RequestHeader(value="email") String email) throws Exception {
-        this.stripeClient.chargeNewCard(token, amount,email);
+    public void chargeCard(@RequestHeader(value="token") String token,
+                           @RequestHeader(value="amount") double amount,
+                           @RequestHeader(value="email") String email,
+                           @RequestHeader(value="advertPackageId") Long advertPackageId,
+                           @RequestHeader(value="userId") Long userId
+
+    )
+
+            throws Exception {
+        this.stripeClient.chargeNewCard(token, amount,email,advertPackageId,userId);
     }
 
 }

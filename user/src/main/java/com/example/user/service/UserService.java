@@ -5,6 +5,7 @@ package com.example.user.service;
 import com.example.user.dto.UserDTO;
 import com.example.user.exception.GenericServiceException;
 import com.example.user.mapper.UserMapper;
+import com.example.user.model.User;
 import com.example.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,14 @@ public class UserService {
     public UserDTO getUserById(Long id){
         return userMapper.toDTO(userRepository.findById(id).
                 orElseThrow(() -> new GenericServiceException(GenericServiceException.NOT_FOUND,"User not found")));
+    }
+
+    public UserDTO getUserByEmail(String email){
+        return userMapper.toDTO(userRepository.findByEmail(email).orElseThrow(() -> new GenericServiceException(GenericServiceException.NOT_FOUND,"User Email not found")));
+    }
+
+    public boolean existsUser(Long id){
+        return userRepository.existsById(id);
     }
 
     @Transactional

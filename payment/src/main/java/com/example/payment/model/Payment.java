@@ -14,13 +14,16 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Payment extends BaseEntity implements Serializable {
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private User user;
+
+    private Long userId;
     private PaymentStatus paymentStatus;
     private Currency currency;
+    private Long advertPackageId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private AdvertPackage advertPackage;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private AdvertPackage advertPackage;
 
 
 }

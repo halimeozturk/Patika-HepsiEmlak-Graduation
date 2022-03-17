@@ -38,8 +38,9 @@ public class Advert extends BaseEntity implements Serializable {
     private BuildState buildState;
     private Boolean active;
     private String roomAndLivingRoom;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User owner;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private User owner;
+    private Long userId;
     @OneToMany(fetch = FetchType.LAZY)
     private List<Image> imageList;
     @ManyToOne(fetch = FetchType.LAZY)

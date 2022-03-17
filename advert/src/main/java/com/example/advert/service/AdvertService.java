@@ -2,6 +2,7 @@ package com.example.advert.service;
 
 
 
+import com.example.advert.client.UserClient;
 import com.example.advert.dto.AdvertDTO;
 import com.example.advert.exception.GenericServiceException;
 import com.example.advert.mapper.AdvertMapper;
@@ -20,6 +21,7 @@ import java.util.Random;
 public class AdvertService {
     private final AdvertMapper advertMapper;
     private final AdvertRepository advertRepository;
+    private final UserClient userClient;
 
     public List<AdvertDTO> getAllList() {
         return advertMapper.toDTOList(advertRepository.findAll());
@@ -28,6 +30,7 @@ public class AdvertService {
     @Transactional
     public AdvertDTO create(AdvertDTO advertDTO) {
         advertDTO.setAdvertNo((long) (1 + new Random().nextInt(900000000)));
+        userClient.getUserById(advertDTO.getUserId());
         return advertMapper.toDTO(advertRepository.save(advertMapper.toEntity(advertDTO)));
     }
 

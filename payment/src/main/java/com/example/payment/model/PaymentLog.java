@@ -18,6 +18,5 @@ public class PaymentLog extends BaseEntity implements Serializable {
     private String errorMessage;
     private String status;
     private ZonedDateTime paymentDate;
-//    private ZonedDateTime endDate;
 
 }

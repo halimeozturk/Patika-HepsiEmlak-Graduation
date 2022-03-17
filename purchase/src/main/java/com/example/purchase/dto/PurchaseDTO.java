@@ -10,7 +10,7 @@ import java.time.ZonedDateTime;
 @EqualsAndHashCode(callSuper = true)
 public class PurchaseDTO extends BaseEntityDTO implements Serializable {
     private PurchaseStatus purchaseStatus;
-    private UserDTO user;
+    private Long userId;
     private AdvertPackageDTO advertPackage;
     private ZonedDateTime purchaseDate;
 }

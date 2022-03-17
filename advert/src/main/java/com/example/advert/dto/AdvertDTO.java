@@ -32,7 +32,8 @@ public class AdvertDTO extends BaseEntityDTO{
     private BuildState buildState;
     private Boolean active;
     private String roomAndLivingRoom;
-    private UserDTO owner;
+//    private UserDTO owner;
+    private Long userId;
     private List<ImageDTO> imageList;
     private AddressDTO address;
     private CategoryDTO mainCategory;

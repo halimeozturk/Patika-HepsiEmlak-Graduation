@@ -11,8 +11,7 @@ import java.time.ZonedDateTime;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Purchase extends BaseEntity implements Serializable {
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Long userId;
 
     @ManyToOne (fetch = FetchType.LAZY)
     private AdvertPackage advertPackage;
