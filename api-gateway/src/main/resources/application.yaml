@@ -32,6 +32,14 @@ spring:
           predicates:
             - Path=/payment/**
             - Method=POST
+    globalcors:
+      corsConfigurations:
+        '[/**]':
+          allowedOrigins: "http://localhost:3001"
+          allowedHeaders: "*"
+          allowedMethods:
+            - GET
+            - POST
 #  main:
 #    allow-bean-definition-overriding: true
 #    web-application-type: reactive

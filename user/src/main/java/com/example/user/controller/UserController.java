@@ -18,10 +18,10 @@ public class UserController {
     private final UserService userService;
 
 
-//    @GetMapping
-//    ResponseEntity<List<UserDTO>> getAllList(){
-//        return ResponseEntity.ok(userService.getAllList());
-//    }
+    @GetMapping
+    ResponseEntity<List<UserDTO>> getAllList(){
+        return ResponseEntity.ok(userService.getAllList());
+    }
 
     @PostMapping
     ResponseEntity<UserDTO> create(@RequestBody UserDTO userDTO){
