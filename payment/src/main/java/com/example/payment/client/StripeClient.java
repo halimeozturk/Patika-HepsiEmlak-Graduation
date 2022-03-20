@@ -2,12 +2,11 @@ package com.example.payment.client;
 
 
 import com.example.payment.dto.AdvertPackageDTO;
-import com.example.payment.dto.EmailMessageDTO;
+import com.example.payment.dto.CardDTO;
 import com.example.payment.dto.PurchaseDTO;
 import com.example.payment.enums.Currency;
 import com.example.payment.enums.PaymentStatus;
 import com.example.payment.enums.PurchaseStatus;
-import com.example.payment.exception.GenericServiceException;
 import com.example.payment.model.Payment;
 import com.example.payment.model.PaymentLog;
 import com.example.payment.repository.PaymentLogRepository;
@@ -16,14 +15,17 @@ import com.example.payment.service.QueueService;
 import com.stripe.Stripe;
 import com.stripe.exception.CardException;
 import com.stripe.model.Charge;
-import com.stripe.model.Customer;
+import com.stripe.model.Token;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 @Slf4j
@@ -32,42 +34,42 @@ public class StripeClient {
     private final PaymentLogRepository paymentLogRepository;
     private final QueueService queueService;
     private final PurchaseClient purchaseClient;
-    private final UserClient userClient;
 
     @Autowired
-    StripeClient(PaymentRepository paymentRepository, PaymentLogRepository paymentLogRepository, QueueService queueService, PurchaseClient purchaseClient, UserClient userClient) {
+    StripeClient(PaymentRepository paymentRepository, PaymentLogRepository paymentLogRepository, QueueService queueService, PurchaseClient purchaseClient) {
         this.paymentRepository = paymentRepository;
         this.paymentLogRepository = paymentLogRepository;
         this.queueService = queueService;
         this.purchaseClient = purchaseClient;
-        this.userClient = userClient;
         Stripe.apiKey = "sk_test_51KdhdHF64pjijg62TOiq6R0jHqThWZkbhwcASt7Uk9ccVyC0IpW7b7z7VojUy6IXaaJMh0s7aUO8FuRO3RNqBGkq00Yht38PKL";
     }
 
-//    public Customer createCustomer(String token, String email) throws Exception {
-//        Map<String, Object> customerParams = new HashMap<String, Object>();
-//        customerParams.put("email", email);
-//        customerParams.put("source", token);
-//        return Customer.create(customerParams);
-//    }
-
-    private Customer getCustomer(String id) throws Exception {
-        return Customer.retrieve(id);
+    public void getToken(@RequestBody CardDTO cardDTO, @RequestHeader(value = "id") UUID id) throws Exception {
+        Map<String, Object> card = new HashMap<>();
+        card.put("number", cardDTO.getNumber());
+        card.put("exp_month", cardDTO.getExp_month());
+        card.put("exp_year", cardDTO.getExp_year());
+        card.put("cvc", cardDTO.getCvc());
+        Map<String, Object> params = new HashMap<>();
+        params.put("card", card);
+        Token token = Token.create(params);
+        cardDTO.setToken(token.getId());
+        cardDTO.setUserId(id);
+        chargeNewCard(cardDTO);
     }
 
-    public void chargeNewCard(String token, double amount, String email, Long advertPackageId,Long userId) throws Exception {
+    public void chargeNewCard(CardDTO cardDTO) throws Exception {
         Map<String, Object> chargeParams = new HashMap<String, Object>();
-        chargeParams.put("amount", (int)(amount));
+        chargeParams.put("amount", (int) cardDTO.getAmount());
         chargeParams.put("currency", "TRY");
-        chargeParams.put("source", token);
+        chargeParams.put("source", cardDTO.getToken());
         try{
             Charge charge = Charge.create(chargeParams);
-            saveSuccessLog(charge,email,advertPackageId,userId);
-
+            saveSuccessLog(charge,cardDTO);
+            log.error("Payment Success : " ,charge);
         }catch (CardException c){
-           saveErrorLog(c,email,advertPackageId,userId);
-           log.info("Payment Declined " ,c);
-
+            saveErrorLog(c,cardDTO);
+            log.error("Payment Declined : " ,c);
         }
     }
 
@@ -82,17 +84,16 @@ public class StripeClient {
 //        queueService.sendMessage(emailMessageDTO);
 //    }
 
-    public void saveSuccessLog(Charge charge, String email,Long advertPackageId,Long userId){
+    public void saveSuccessLog(Charge charge, CardDTO cardDTO){
         Payment payment = new Payment();
-        payment.setAdvertPackageId(advertPackageId);
-        payment.setUserId(userId);
+        payment.setAdvertPackageId(cardDTO.getAdvertPackageId());
+        payment.setUserId(cardDTO.getUserId());
         payment.setCurrency(Currency.TL);
         payment.setPaymentStatus(PaymentStatus.COMPLETED);
         payment = paymentRepository.save(payment);
 //        sendEmail(email,"Your Payment Has Been Done",payment);
-        savePurchase(advertPackageId, userId);
+        savePurchase(cardDTO.getAdvertPackageId(), cardDTO.getUserId());
         saveSuccsessPaymentLog(payment,charge);
-
     }
 
     public void saveSuccsessPaymentLog(Payment payment, Charge charge){
@@ -103,7 +104,7 @@ public class StripeClient {
         paymentLogRepository.save(paymentLog);
     }
 
-    public void savePurchase(Long advertPackageId, Long userId){
+    public void savePurchase(Long advertPackageId, UUID userId){
         PurchaseDTO purchaseDTO = new PurchaseDTO();
         AdvertPackageDTO advertPackageDTO = new AdvertPackageDTO();
         advertPackageDTO.setId(advertPackageId);
@@ -111,18 +112,17 @@ public class StripeClient {
         purchaseDTO.setPurchaseDate(ZonedDateTime.now());
         purchaseDTO.setAdvertPackage(advertPackageDTO);
         purchaseDTO.setPurchaseStatus(PurchaseStatus.COMPLETED);
-        purchaseClient.create(purchaseDTO);
+        purchaseClient.create(purchaseDTO,userId);
     }
 
-    public void saveErrorLog(CardException c, String email, Long advertPackageId, Long userId){
+    public void saveErrorLog(CardException c, CardDTO cardDTO){
         Payment payment = new Payment();
-        payment.setAdvertPackageId(advertPackageId);
-        payment.setUserId(userId);
+        payment.setAdvertPackageId(cardDTO.getAdvertPackageId());
+        payment.setUserId(cardDTO.getUserId());
         payment.setCurrency(Currency.TL);
         payment.setPaymentStatus(PaymentStatus.REJECTED);
         payment = paymentRepository.save(payment);
 //        sendEmail(email,"Your Payment Could Not Be Made",payment);
-        savePurchase(advertPackageId, userId);
         saveFailPaymentLog(payment,c);
 
     }
@@ -134,17 +134,4 @@ public class StripeClient {
         paymentLog.setErrorMessage(c.getMessage());
         paymentLogRepository.save(paymentLog);
     }
-
-
-//    public Charge chargeCustomerCard(String customerId, int amount) throws Exception {
-//        String sourceCard = getCustomer(customerId).getDefaultSource();
-//        Map<String, Object> chargeParams = new HashMap<String, Object>();
-//        chargeParams.put("amount", amount);
-//        chargeParams.put("currency", "USD");
-//        chargeParams.put("customer", customerId);
-//        chargeParams.put("source", sourceCard);
-//        Charge charge = Charge.create(chargeParams);
-//        return charge;
-//    }
-
 }

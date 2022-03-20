@@ -1,14 +1,12 @@
 package com.example.advert.dto;
 
 
-import com.example.advert.enums.BuildState;
-import com.example.advert.enums.BuildType;
-import com.example.advert.enums.Currency;
-import com.example.advert.enums.PublicationType;
+import com.example.advert.enums.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -33,9 +31,10 @@ public class AdvertDTO extends BaseEntityDTO{
     private Boolean active;
     private String roomAndLivingRoom;
 //    private UserDTO owner;
-    private Long userId;
+    private UUID userId;
     private List<ImageDTO> imageList;
     private AddressDTO address;
     private CategoryDTO mainCategory;
     private CategoryDTO subCategory;
+    private AdvertStatus advertStatus;
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -22,21 +23,24 @@ public class PurchaseService {
     private final PurchaseRepository purchaseRepository;
     private final AdvertPackageRepository advertPackageRepository;
     private final UserClient userClient;
+    private final PurchaseCountService purchaseCountService;
 
     public List<PurchaseDTO> getAllList() {
         return purchaseMapper.toDTOList(purchaseRepository.findAll());
     }
 
     @Transactional
-    public PurchaseDTO create(PurchaseDTO purchaseDTO) {
-        checkNotInUse(purchaseDTO);
+    public PurchaseDTO create(PurchaseDTO purchaseDTO, UUID id) {
+        checkNotInUse(purchaseDTO,id);
+        purchaseCountService.purchaseCount(purchaseDTO,id);
+        purchaseDTO.setUserId(id);
         return purchaseMapper.toDTO(purchaseRepository.save(purchaseMapper.toEntity(purchaseDTO)));
     }
 
     @Transactional
-    public PurchaseDTO update(PurchaseDTO purchaseDTO) {
+    public PurchaseDTO update(PurchaseDTO purchaseDTO,UUID id) {
         getById(purchaseDTO.getId());
-        checkNotInUse(purchaseDTO);
+        checkNotInUse(purchaseDTO,id);
         return purchaseMapper.toDTO(purchaseRepository.save(purchaseMapper.toEntity(purchaseDTO)));
     }
 
@@ -44,13 +48,13 @@ public class PurchaseService {
         return purchaseMapper.toDTO(purchaseRepository.findById(id).orElseThrow(() -> new GenericServiceException(GenericServiceException.NOT_FOUND,"Purchase not found")));
     }
 
-    public PurchaseDTO getByUserId(Long id){
+    public PurchaseDTO getByUserId(UUID id){
         return purchaseMapper.toDTO(purchaseRepository.findByUserId(id).orElseThrow(() -> new GenericServiceException(GenericServiceException.NOT_FOUND,"Purchase not found")));
     }
 
-    public void checkNotInUse(PurchaseDTO purchaseDTO){
-        if(!userClient.existsUser(purchaseDTO.getUserId())){
-            throw new GenericServiceException(GenericServiceException.NOT_FOUND,"User not found " + purchaseDTO.getUserId());
+    public void checkNotInUse(PurchaseDTO purchaseDTO,UUID id){
+        if(!userClient.existsUser(id)){
+            throw new GenericServiceException(GenericServiceException.NOT_FOUND,"User not found " + id);
         }
         if(!advertPackageRepository.existsById(purchaseDTO.getAdvertPackage().getId())){
             throw new GenericServiceException(GenericServiceException.NOT_FOUND,"Package not found " + purchaseDTO.getAdvertPackage().getId());

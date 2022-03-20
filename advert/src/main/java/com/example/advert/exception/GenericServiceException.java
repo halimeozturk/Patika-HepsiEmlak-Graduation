@@ -4,6 +4,7 @@ public class GenericServiceException extends RuntimeException {
     public static final String INTERNAL_ERROR = "internal_error";
     public static final String NOT_FOUND = "not_found";
     public static final String RESOURCE_NOT_FOUND = "resource_not_found";
+    public static final String CANT_CREATE_ADVERT = "cant_create_advert";
 
     protected final String error;
     protected final String errorDescription;

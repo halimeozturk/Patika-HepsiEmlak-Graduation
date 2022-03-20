@@ -1,0 +1,24 @@
+
+
+server:
+  port: 8086
+
+spring:
+  application:
+    name: advert
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8085/auth
+  datasource:
+    url: jdbc:postgresql://localhost:5432/advert
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+

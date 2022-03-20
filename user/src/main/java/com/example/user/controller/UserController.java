@@ -4,11 +4,11 @@ package com.example.user.controller;
 import com.example.user.dto.UserDTO;
 import com.example.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -34,18 +34,18 @@ public class UserController {
 //    }
 
     @GetMapping("/{id}")
-    ResponseEntity<UserDTO> getUserById(@PathVariable Long id){
+    ResponseEntity<UserDTO> getUserById(@PathVariable UUID id){
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @GetMapping("/{email}")
-    ResponseEntity<UserDTO> getUserById(@PathVariable String email){
+    @GetMapping("/email/{email}")
+    ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email){
         return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
 
     @GetMapping("/exists/{id}")
-    boolean existsUser(@PathVariable Long id){
+    boolean existsUser(@PathVariable UUID id){
         return userService.existsUser(id);
     }
 }

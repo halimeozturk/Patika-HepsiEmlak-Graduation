@@ -1,15 +1,13 @@
 package com.example.advert.model;
 
-import com.example.advert.enums.BuildState;
-import com.example.advert.enums.BuildType;
-import com.example.advert.enums.Currency;
-import com.example.advert.enums.PublicationType;
+import com.example.advert.enums.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -40,7 +38,7 @@ public class Advert extends BaseEntity implements Serializable {
     private String roomAndLivingRoom;
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    private User owner;
-    private Long userId;
+    private UUID userId;
     @OneToMany(fetch = FetchType.LAZY)
     private List<Image> imageList;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -49,5 +47,6 @@ public class Advert extends BaseEntity implements Serializable {
     private Category mainCategory;
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
     private Category subCategory;
+    private AdvertStatus advertStatus;
 
 }

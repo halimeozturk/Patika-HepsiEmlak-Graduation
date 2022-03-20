@@ -3,16 +3,24 @@ package com.example.user.dto;
 
 import com.example.user.enums.UserType;
 
-import com.sun.istack.NotNull;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Column;
+import java.io.Serializable;
+import java.time.ZonedDateTime;
+import java.util.UUID;
 
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class UserDTO extends BaseEntityDTO {
+@EqualsAndHashCode(callSuper = false)
+public class UserDTO implements Serializable {
+    private UUID id;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private ZonedDateTime creationDate;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private ZonedDateTime modificationDate;
     private UserType userType;
     private String password;
     private String firstName;

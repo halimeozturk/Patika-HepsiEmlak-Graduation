@@ -1,9 +1,15 @@
 package com.example.payment.controller;
 
 import com.example.payment.client.StripeClient;
-import com.stripe.model.Charge;
+import com.example.payment.dto.CardDTO;
+import com.stripe.Stripe;
+import com.stripe.model.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin("*")
@@ -17,17 +23,14 @@ public class PaymentGatewayController {
         this.stripeClient = stripeClient;
     }
 
-    @PostMapping
-    public void chargeCard(@RequestHeader(value="token") String token,
-                           @RequestHeader(value="amount") double amount,
-                           @RequestHeader(value="email") String email,
-                           @RequestHeader(value="advertPackageId") Long advertPackageId,
-                           @RequestHeader(value="userId") Long userId
+//    @PostMapping
+//    public void chargeCard(CardDTO cardDTO) throws Exception {
+//        this.stripeClient.chargeNewCard(cardDTO);
+//    }
 
-    )
-
-            throws Exception {
-        this.stripeClient.chargeNewCard(token, amount,email,advertPackageId,userId);
+    @PostMapping("/v1/tokens")
+    public void getToken(@RequestBody CardDTO cardDTO,@RequestHeader(value = "id") UUID id) throws Exception {
+        stripeClient.getToken(cardDTO,id);
     }
 
 }

@@ -24,7 +24,6 @@ public class WebSecurityConfig {
 		.httpBasic().disable()
 		.formLogin().disable()
 		.csrf().disable();
-		
 		return http.build();
 		// @formatter:on
 
@@ -32,6 +31,7 @@ public class WebSecurityConfig {
 
 	@Bean
 	public RouteLocator routes(RouteLocatorBuilder builder) {
+		System.out.println("hello " + filter);
 		return builder.routes()
 				.route("user",
 						r -> r.path("/auth/**")
@@ -40,18 +40,23 @@ public class WebSecurityConfig {
 						r -> r.path("/users/**")
 								.uri("http://localhost:8085"))
 				.route("advert",
-						r -> r.method(HttpMethod.POST,HttpMethod.GET)
+						r -> r.method(HttpMethod.POST,HttpMethod.GET,HttpMethod.PUT)
 								.and()
 								.path(("/adverts/**"))
 								.filters(f -> f.filter(filter)).uri("http://localhost:8086"))
 
 				.route("purchase",
-						r -> r.method(HttpMethod.GET,HttpMethod.POST)
+						r -> r.method(HttpMethod.GET,HttpMethod.POST,HttpMethod.PUT)
 								.and()
 								.path("/purchase/**")
 								.filters(f -> f.filter(filter)).uri("http://localhost:8088"))
+				.route("purchase",
+						r -> r.method(HttpMethod.GET,HttpMethod.POST,HttpMethod.PUT)
+								.and()
+								.path("/purchase-counts/**")
+								.filters(f -> f.filter(filter)).uri("http://localhost:8088"))
 				.route("payment",
-						r -> r.method(HttpMethod.POST)
+						r -> r.method(HttpMethod.POST,HttpMethod.PUT,HttpMethod.GET)
 								.and()
 								.path("/payment/**")
 								.filters(f -> f.filter(filter)).uri("http://localhost:8080"))

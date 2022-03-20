@@ -6,12 +6,13 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class PurchaseDTO extends BaseEntityDTO implements Serializable {
     private PurchaseStatus purchaseStatus;
-    private Long userId;
+    private UUID userId;
     private AdvertPackageDTO advertPackage;
     private ZonedDateTime purchaseDate;
 }

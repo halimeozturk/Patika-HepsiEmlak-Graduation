@@ -13,11 +13,6 @@ import java.time.ZonedDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false)
-    protected Long id;
-
     @CreatedDate
     @Column(updatable = false, nullable = true)
     private ZonedDateTime creationDate;

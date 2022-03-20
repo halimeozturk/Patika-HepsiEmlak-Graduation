@@ -25,26 +25,18 @@ spring:
         - id: purchase
           uri: http://localhost:8088
           predicates:
-            - Path=/purchase/**
+            - Path=/purchase/**, /purchase-counts/**
             - Method=POST,GET,PUT
         - id: payment
           uri: http://localhost:8080
           predicates:
             - Path=/payment/**
             - Method=POST
-    globalcors:
-      corsConfigurations:
-        '[/**]':
-          allowedOrigins: "http://localhost:3001"
-          allowedHeaders: "*"
-          allowedMethods:
-            - GET
-            - POST
-#  main:
-#    allow-bean-definition-overriding: true
-#    web-application-type: reactive
-#
-#
-#logging:
-#  level:
-#    '[org.springframework.security]': TRACE
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: reactive
+
+
+logging:
+  level:
+    '[org.springframework.security]': TRACE

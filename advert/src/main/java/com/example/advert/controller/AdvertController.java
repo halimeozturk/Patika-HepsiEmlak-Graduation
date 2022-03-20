@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -21,8 +22,8 @@ public class AdvertController {
     }
 
     @PostMapping
-    ResponseEntity<AdvertDTO> create(@RequestBody AdvertDTO advertDTO){
-        return ResponseEntity.ok(advertService.create(advertDTO));
+    ResponseEntity<AdvertDTO> create(@RequestBody AdvertDTO advertDTO,@RequestHeader(value = "id") UUID id){
+        return ResponseEntity.ok(advertService.create(advertDTO,id));
     }
 
     @PutMapping
