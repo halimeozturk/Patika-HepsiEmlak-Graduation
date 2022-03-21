@@ -41,6 +41,29 @@ public class RabbitMqConfig {
     public Binding binding(Queue queue, DirectExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(routingkey);
     }
+    @Value("${rabbitmq.mail-queue}")
+    private String queueNameMail;
+
+    @Value("${rabbitmq.mail-exchange}")
+    private String exchangeMail;
+
+    @Value("${rabbitmq.mail-routingkey}")
+    private String routingkeyMail;
+
+    @Bean
+    public Queue queueMail() {
+        return new Queue(queueNameMail, false);
+    }
+
+    @Bean
+    public DirectExchange exchangeMail() {
+        return new DirectExchange(exchangeMail);
+    }
+
+    @Bean
+    public Binding bindingMail(Queue queueMail, DirectExchange exchangeMail) {
+        return BindingBuilder.bind(queueMail).to(exchangeMail).with(routingkeyMail);
+    }
 
     @Bean
     public MessageConverter jsonMessageConverter() {

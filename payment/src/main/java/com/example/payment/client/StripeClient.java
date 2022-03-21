@@ -1,8 +1,8 @@
 package com.example.payment.client;
 
 
-import com.example.payment.dto.AdvertPackageDTO;
 import com.example.payment.dto.CardDTO;
+import com.example.payment.dto.EmailMessageDTO;
 import com.example.payment.dto.PurchaseDTO;
 import com.example.payment.enums.Currency;
 import com.example.payment.enums.PaymentStatus;
@@ -26,14 +26,16 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import com.google.gson.Gson;
 
 @Component
 @Slf4j
-public class StripeClient {
+public class StripeClient{
     private final PaymentRepository paymentRepository;
     private final PaymentLogRepository paymentLogRepository;
     private final QueueService queueService;
     private final PurchaseClient purchaseClient;
+    private static Gson gson = new Gson();
 
     @Autowired
     StripeClient(PaymentRepository paymentRepository, PaymentLogRepository paymentLogRepository, QueueService queueService, PurchaseClient purchaseClient) {
@@ -73,16 +75,18 @@ public class StripeClient {
         }
     }
 
-//    public void sendEmail(String email, String message,Payment payment){
-//        EmailMessageDTO emailMessageDTO = new EmailMessageDTO();
-//        emailMessageDTO.setEmail(email);
-//        emailMessageDTO.setMessage(message);
-//        emailMessageDTO.setCurrency(payment.getCurrency());
+    public void sendEmail(String email, String message,Payment payment){
+        EmailMessageDTO emailMessageDTO = new EmailMessageDTO();
+        emailMessageDTO.setEmail(email);
+        emailMessageDTO.setMessage(message);
+        emailMessageDTO.setCurrency(payment.getCurrency());
 //        emailMessageDTO.setDuration(payment.getAdvertPackage().getDuration());
 //        emailMessageDTO.setAdvertNumber(payment.getAdvertPackage().getAdvertNumber());
 //        emailMessageDTO.setPrice(payment.getAdvertPackage().getPrice());
-//        queueService.sendMessage(emailMessageDTO);
-//    }
+        String jsonString = gson.toJson(email);
+
+        queueService.sendMessage(emailMessageDTO);
+    }
 
     public void saveSuccessLog(Charge charge, CardDTO cardDTO){
         Payment payment = new Payment();
@@ -91,8 +95,8 @@ public class StripeClient {
         payment.setCurrency(Currency.TL);
         payment.setPaymentStatus(PaymentStatus.COMPLETED);
         payment = paymentRepository.save(payment);
-//        sendEmail(email,"Your Payment Has Been Done",payment);
-        savePurchase(cardDTO.getAdvertPackageId(), cardDTO.getUserId());
+        sendEmail(cardDTO.getEmail(),"Your Payment Has Been Done",payment);
+        savePurchase(cardDTO.getAdvertPackageId(), cardDTO.getUserId(),payment.getId());
         saveSuccsessPaymentLog(payment,charge);
     }
 
@@ -104,15 +108,14 @@ public class StripeClient {
         paymentLogRepository.save(paymentLog);
     }
 
-    public void savePurchase(Long advertPackageId, UUID userId){
+    public void savePurchase(Long advertPackageId, UUID userId, Long id){
         PurchaseDTO purchaseDTO = new PurchaseDTO();
-        AdvertPackageDTO advertPackageDTO = new AdvertPackageDTO();
-        advertPackageDTO.setId(advertPackageId);
         purchaseDTO.setUserId(userId);
-        purchaseDTO.setPurchaseDate(ZonedDateTime.now());
-        purchaseDTO.setAdvertPackage(advertPackageDTO);
+        purchaseDTO.setAdvertPackageId(advertPackageId);
         purchaseDTO.setPurchaseStatus(PurchaseStatus.COMPLETED);
-        purchaseClient.create(purchaseDTO,userId);
+        purchaseDTO.setPaymentId(id);
+        String jsonString = gson.toJson(purchaseDTO);
+        queueService.createPurchase(jsonString);
     }
 
     public void saveErrorLog(CardException c, CardDTO cardDTO){

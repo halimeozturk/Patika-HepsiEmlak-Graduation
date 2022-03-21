@@ -5,6 +5,7 @@ public class GenericServiceException extends RuntimeException {
     public static final String NOT_FOUND = "not_found";
     public static final String RESOURCE_NOT_FOUND = "resource_not_found";
     public static final String CANT_CREATE_ADVERT = "cant_create_advert";
+    public static final String OPERATION_NOT_ALLOWED = "operation_not_allowed";
 
     protected final String error;
     protected final String errorDescription;

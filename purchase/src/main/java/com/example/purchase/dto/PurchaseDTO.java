@@ -14,5 +14,6 @@ public class PurchaseDTO extends BaseEntityDTO implements Serializable {
     private AdvertPackageDTO advertPackage;
     private ZonedDateTime purchaseDate;
     private UUID userId;
+    private Long paymentId;
 
 }

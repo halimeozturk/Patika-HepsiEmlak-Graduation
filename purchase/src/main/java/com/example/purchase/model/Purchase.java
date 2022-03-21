@@ -18,4 +18,7 @@ public class Purchase extends BaseEntity implements Serializable {
     private AdvertPackage advertPackage;
 
     private ZonedDateTime purchaseDate;
+
+    private Long paymentId;
+
 }

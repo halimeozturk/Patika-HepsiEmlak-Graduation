@@ -20,7 +20,7 @@ public class RabbitMqListenerService {
     @RabbitListener(queues = "${rabbitmq.queue}")
     public void receiveMessage(EmailDTO message) {
         log.info(message.toString());
-        emailService.sendMail(message);
+//        emailService.sendMail(message);
     }
 
 }

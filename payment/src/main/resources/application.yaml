@@ -1,7 +1,7 @@
 
 
 server:
-  port: 8086
+  port: 8080
 
 spring:
   application:
@@ -12,7 +12,7 @@ spring:
         jwt:
           jwk-set-uri: http://localhost:8085/auth
   datasource:
-    url: jdbc:postgresql://localhost:5432/advert
+    url: jdbc:postgresql://localhost:5432/payment
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: postgres
@@ -31,6 +31,9 @@ spring:
 
 
 rabbitmq:
-  exchange: advert.status.exchange
-  routingkey: advert.status.routingkey
-  queue: advert.status
+  exchange: payment.exchange
+  routingkey: payment.routingkey
+  queue: payment
+  mail-exchange: mail.exchange
+  mail-routingkey: mail.routingkey
+  mail-queue: mail

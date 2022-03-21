@@ -47,6 +47,7 @@ public class Advert extends BaseEntity implements Serializable {
     private Category mainCategory;
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
     private Category subCategory;
+    @Enumerated(EnumType.STRING)
     private AdvertStatus advertStatus;
 
 }

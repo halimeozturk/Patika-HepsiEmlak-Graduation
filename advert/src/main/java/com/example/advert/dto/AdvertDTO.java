@@ -5,12 +5,13 @@ import com.example.advert.enums.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class AdvertDTO extends BaseEntityDTO{
+public class AdvertDTO extends BaseEntityDTO  implements Serializable {
     private Long advertNo;
     private String title;
     private String description;

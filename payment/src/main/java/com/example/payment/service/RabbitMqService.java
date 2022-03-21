@@ -17,8 +17,12 @@ public class RabbitMqService implements QueueService {
     private RabbitMqConfig config;
 
     @Override
-    public void sendMessage(EmailMessageDTO message) {
-        rabbitTemplate.convertAndSend(config.getExchange(), config.getRoutingkey(), message);
+    public void createPurchase(String purchaseDTO) {
+        rabbitTemplate.convertAndSend(config.getExchange(), config.getRoutingkey(), purchaseDTO);
     }
 
+    @Override
+    public void sendMessage(EmailMessageDTO mail) {
+        rabbitTemplate.convertAndSend(config.getExchangeMail(), config.getRoutingkeyMail(), mail);
+    }
 }

@@ -34,7 +34,9 @@ public class PurchaseService {
         checkNotInUse(purchaseDTO,id);
         purchaseCountService.purchaseCount(purchaseDTO,id);
         purchaseDTO.setUserId(id);
-        return purchaseMapper.toDTO(purchaseRepository.save(purchaseMapper.toEntity(purchaseDTO)));
+        Purchase purchase = purchaseRepository.save(purchaseMapper.toEntity(purchaseDTO));
+
+        return purchaseMapper.toDTO(purchase);
     }
 
     @Transactional
@@ -60,4 +62,6 @@ public class PurchaseService {
             throw new GenericServiceException(GenericServiceException.NOT_FOUND,"Package not found " + purchaseDTO.getAdvertPackage().getId());
         }
     }
+
+
 }
