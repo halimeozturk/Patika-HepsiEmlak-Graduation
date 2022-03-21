@@ -18,9 +18,9 @@ public class RabbitMqListenerService {
     private EmailService emailService;
 
     @RabbitListener(queues = "${rabbitmq.queue}")
-    public void receiveMessage(EmailDTO message) {
+    public void receiveMessage(EmailDTO message) throws MessagingException {
         log.info(message.toString());
-//        emailService.sendMail(message);
+        emailService.sendMail(message);
     }
 
 }

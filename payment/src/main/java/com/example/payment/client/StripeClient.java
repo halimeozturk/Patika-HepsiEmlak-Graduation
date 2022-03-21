@@ -79,12 +79,11 @@ public class StripeClient{
         EmailMessageDTO emailMessageDTO = new EmailMessageDTO();
         emailMessageDTO.setEmail(email);
         emailMessageDTO.setMessage(message);
-        emailMessageDTO.setCurrency(payment.getCurrency());
-//        emailMessageDTO.setDuration(payment.getAdvertPackage().getDuration());
-//        emailMessageDTO.setAdvertNumber(payment.getAdvertPackage().getAdvertNumber());
-//        emailMessageDTO.setPrice(payment.getAdvertPackage().getPrice());
-        String jsonString = gson.toJson(email);
-
+        emailMessageDTO.setCurrency(String.valueOf(payment.getCurrency()));
+        emailMessageDTO.setAdvertPackageId(payment.getAdvertPackageId());
+        emailMessageDTO.setUserId(payment.getUserId());
+        emailMessageDTO.setPaymentStatus(String.valueOf(payment.getPaymentStatus()));
+//        String jsonString = gson.toJson(email);
         queueService.sendMessage(emailMessageDTO);
     }
 
@@ -95,9 +94,9 @@ public class StripeClient{
         payment.setCurrency(Currency.TL);
         payment.setPaymentStatus(PaymentStatus.COMPLETED);
         payment = paymentRepository.save(payment);
-        sendEmail(cardDTO.getEmail(),"Your Payment Has Been Done",payment);
         savePurchase(cardDTO.getAdvertPackageId(), cardDTO.getUserId(),payment.getId());
         saveSuccsessPaymentLog(payment,charge);
+        sendEmail(cardDTO.getEmail(),"Your Payment Has Been Done",payment);
     }
 
     public void saveSuccsessPaymentLog(Payment payment, Charge charge){

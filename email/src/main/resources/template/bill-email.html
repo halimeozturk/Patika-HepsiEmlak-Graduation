@@ -1,0 +1,73 @@
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml" style=" margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;">
+
+<head>
+    <title>Fatura</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+
+
+<body bgcolor="#FFFFFF" style=" margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;" >
+<table id="Table_01" width="650" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td colspan="3">
+            </td>
+    </tr>
+    <tr>
+        <td>
+            </td>
+        <td style="background: #b00707;
+         color: #ffffff;
+         font-weight: bold;
+            font: inherit;" width="475" height="274">
+            <div style="font-size: 25px; font-family: Calibri,serif;color: whitesmoke;font-weight: bold;margin-left: 28px;text-align: center">EMLAK BURADA </div>
+            <p style="font-size: 20px; font-family: Calibri,
+            serif;color: whitesmoke;font-weight: bold;
+            margin-left: 28px;">Sayın
+                <b th:text="${name}"> </b>
+                <b th:text="${surname}"> </b>,
+                <br/> <br/>
+                Ödemeniz başarı ile gerçekleşti.
+                Fatura bilgileriniz aşağıdaki gibidir.
+                <br/><br/>
+
+
+             FATURA BİLGİLERİ<br><br>
+            <b style="font-size: 18px">Paket Adı= </b><b th:text="${packageName} "></b>,<br>
+                <b style="font-size: 18px">Fiyat= </b><b th:text="${price}"></b>
+                <b style="font-size: 18px"> </b><b th:text="${currency}"></b>
+
+                <br>
+                <b style="font-size: 18px">Paket Süresi= </b><b th:text="${duration} "></b>,
+
+
+                <div style="font-size: 20px; font-family: Calibri,
+            serif;color: whitesmoke;font-weight: bold;
+            margin-left: 28px;">İyi günler dileriz</div>
+
+            </p>
+        <td>
+           </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+           </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <a href="https://www.emlakburada.com.tr/">
+             </a></td>
+    </tr>
+</table>
+</body>
+
+</html>
