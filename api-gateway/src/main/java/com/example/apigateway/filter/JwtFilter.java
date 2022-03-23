@@ -51,7 +51,7 @@ public class JwtFilter implements GatewayFilter {
 
 		List<String> headerList = headers.get(AUTHORIZATION);
 		String token = headerList.get(0);
-		if (token.isBlank()) {
+		if (token.isEmpty()) {
 			log.info("Header has AUTHORIZATION but has not token");
 			response.setStatusCode(HttpStatus.UNAUTHORIZED);
 			return response.setComplete();

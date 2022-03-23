@@ -6,4 +6,6 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface PurchaseMapper extends BaseMapper<Purchase, PurchaseDTO>{
+
+
 }

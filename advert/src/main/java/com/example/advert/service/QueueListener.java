@@ -1,15 +1,12 @@
 package com.example.advert.service;
 
-import com.example.advert.dto.AdvertDTO;
 import com.example.advert.enums.AdvertStatus;
 import com.example.advert.exception.GenericServiceException;
-import com.example.advert.mapper.AdvertMapper;
 import com.example.advert.model.Advert;
 import com.example.advert.repository.AdvertRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,7 +15,6 @@ import org.springframework.stereotype.Service;
 public class QueueListener {
 
     private final AdvertRepository advertRepository;
-    private final AdvertMapper advertMapper;
 
     @RabbitListener(queues = "${rabbitmq.queue}")
     public void getQueueMessage(Long id) {

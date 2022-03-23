@@ -25,9 +25,6 @@ public class PurchaseService {
     private final UserClient userClient;
     private final PurchaseCountService purchaseCountService;
 
-    public List<PurchaseDTO> getAllList() {
-        return purchaseMapper.toDTOList(purchaseRepository.findAll());
-    }
 
     @Transactional
     public PurchaseDTO create(PurchaseDTO purchaseDTO, UUID id) {
@@ -50,8 +47,8 @@ public class PurchaseService {
         return purchaseMapper.toDTO(purchaseRepository.findById(id).orElseThrow(() -> new GenericServiceException(GenericServiceException.NOT_FOUND,"Purchase not found")));
     }
 
-    public PurchaseDTO getByUserId(UUID id){
-        return purchaseMapper.toDTO(purchaseRepository.findByUserId(id).orElseThrow(() -> new GenericServiceException(GenericServiceException.NOT_FOUND,"Purchase not found")));
+    public List<PurchaseDTO> getByUserId(UUID id){
+        return purchaseMapper.toDTOList(purchaseRepository.findByUserId(id).orElseThrow(() -> new GenericServiceException(GenericServiceException.NOT_FOUND, "Purchase not found")));
     }
 
     public void checkNotInUse(PurchaseDTO purchaseDTO,UUID id){

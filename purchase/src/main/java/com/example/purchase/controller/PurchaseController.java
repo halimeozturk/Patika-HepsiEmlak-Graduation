@@ -15,11 +15,6 @@ import java.util.UUID;
 public class PurchaseController {
     private final PurchaseService purchaseService;
 
-    @GetMapping
-    ResponseEntity<List<PurchaseDTO>> getAllList(){
-        return ResponseEntity.ok(purchaseService.getAllList());
-    }
-
     @PostMapping
     ResponseEntity<PurchaseDTO> create(@RequestBody PurchaseDTO purchaseDTO, @RequestHeader(value = "id") UUID id){
         return ResponseEntity.ok(purchaseService.create(purchaseDTO,id));
@@ -34,5 +29,10 @@ public class PurchaseController {
     @GetMapping("/{id}")
     ResponseEntity<PurchaseDTO> getById(@PathVariable Long id){
         return ResponseEntity.ok(purchaseService.getById(id));
+    }
+
+    @GetMapping("/all")
+    ResponseEntity<List<PurchaseDTO>> getByUserId(@RequestHeader("id") UUID userId){
+        return ResponseEntity.ok(purchaseService.getByUserId(userId));
     }
 }

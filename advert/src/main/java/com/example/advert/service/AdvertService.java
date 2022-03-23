@@ -50,6 +50,7 @@ public class AdvertService {
         userClient.getUserById(id);
         checkPurchaseCount(id);
         advertDTO.setAdvertStatus(AdvertStatus.IN_REVIEW);
+        advertDTO.setUserId(id);
         Advert advert = advertRepository.save(advertMapper.toEntity(advertDTO));
         writeQueue(advert.getId());
         return advertMapper.toDTO(advert);
@@ -82,7 +83,7 @@ public class AdvertService {
             purchaseCount.getBody().setRemainingTotal(purchaseCount.getBody().getRemainingTotal() - 1);
             purchaseCountClient.update(purchaseCount.getBody());
         }else{
-            throw new GenericServiceException(GenericServiceException.CANT_CREATE_ADVERT,"\"You have don't the right to create advert.You must purchase package\"");
+            throw new GenericServiceException(GenericServiceException.CANT_CREATE_ADVERT,"You have don't the right to create advert.You must purchase package");
         }
     }
 
@@ -90,18 +91,19 @@ public class AdvertService {
         queueService.changeStatus(id);
     }
 
-    public Page<AdvertDTO> getAllListWithFilter(Pageable pageable, ZonedDateTime creationDate, Long advertNo, Currency currency, Double price, Double netSquareMeters, Double squareMeters, Integer room, Integer livingRoom, Integer age, Integer bathRoom, Integer numberOfFloor, String floor, PublicationType publicationType, BuildType buildType, Boolean active, String roomAndLivingRoom, String province, String district) {
+    public Page<AdvertDTO> getAllListWithFilter(Pageable pageable, ZonedDateTime creationDate,
+                                                Long advertNo, Currency currency, Double price,
+                                                Double netSquareMeters, Double squareMeters, Integer room,
+                                                Integer livingRoom, Integer age, Integer bathRoom, Integer numberOfFloor,
+                                                String floor, PublicationType publicationType, BuildType buildType, Boolean active,
+                                                String roomAndLivingRoom, String province, String district) {
         Page<Advert> adverts = advertRepository.findAll((Specification<Advert>) (root, query, criteriaBuilder) -> {
-            query.distinct(true);
             List<Predicate> predicates = new ArrayList<>();
             if (floor != null) {
                 predicates.add(criteriaBuilder.and(criteriaBuilder.like(criteriaBuilder.lower(root.get("floor")), "%" + floor.toLowerCase(new Locale("tr", "TR")) + "%")));
             }
             if (roomAndLivingRoom != null) {
                 predicates.add(criteriaBuilder.and(criteriaBuilder.like(criteriaBuilder.lower(root.get("roomAndLivingRoom")), "%" + roomAndLivingRoom.toLowerCase(new Locale("tr", "TR")) + "%")));
-            }
-            if (advertNo != null) {
-                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("advertNo"), advertNo)));
             }
             if (advertNo != null) {
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("advertNo"), advertNo)));
@@ -148,7 +150,11 @@ public class AdvertService {
             if(creationDate != null){
                 predicates.add(criteriaBuilder.and(criteriaBuilder.between(root.get("creationDate"), DateFormatUtils.addFromLocalTime(creationDate), DateFormatUtils.addToLocalTime(creationDate))));
             }
-            predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("active"), active)));
+            if(active != null){
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("active"), active)));
+            }else{
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("active"), true)));
+            }
             query.orderBy(criteriaBuilder.desc(root.get("modificationDate")));
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         }, pageable);

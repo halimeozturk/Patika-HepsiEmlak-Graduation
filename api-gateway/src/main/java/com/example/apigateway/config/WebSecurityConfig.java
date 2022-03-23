@@ -40,7 +40,7 @@ public class WebSecurityConfig {
 						r -> r.path("/users/**")
 								.uri("http://localhost:8085"))
 				.route("advert",
-						r -> r.method(HttpMethod.POST,HttpMethod.GET,HttpMethod.PUT)
+						r -> r.method(HttpMethod.POST,HttpMethod.PUT)
 								.and()
 								.path(("/adverts/**"))
 								.filters(f -> f.filter(filter)).uri("http://localhost:8086"))
@@ -48,7 +48,7 @@ public class WebSecurityConfig {
 				.route("purchase",
 						r -> r.method(HttpMethod.GET,HttpMethod.POST,HttpMethod.PUT)
 								.and()
-								.path("/purchase/**")
+								.path("/purchases/**")
 								.filters(f -> f.filter(filter)).uri("http://localhost:8088"))
 				.route("purchase",
 						r -> r.method(HttpMethod.GET,HttpMethod.POST,HttpMethod.PUT)
