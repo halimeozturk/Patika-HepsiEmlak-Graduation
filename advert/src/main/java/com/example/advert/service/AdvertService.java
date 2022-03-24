@@ -83,7 +83,7 @@ public class AdvertService {
             purchaseCount.getBody().setRemainingTotal(purchaseCount.getBody().getRemainingTotal() - 1);
             purchaseCountClient.update(purchaseCount.getBody());
         }else{
-            throw new GenericServiceException(GenericServiceException.CANT_CREATE_ADVERT,"You have don't the right to create advert.You must purchase package");
+            throw new GenericServiceException(GenericServiceException.CANT_CREATE_ADVERT,"You don't have the right to create advert.You must purchase package");
         }
     }
 

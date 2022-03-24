@@ -28,10 +28,10 @@ public class UserController {
         return ResponseEntity.ok(userService.create(userDTO));
     }
 
-//    @PutMapping
-//    ResponseEntity<UserDTO> update(@RequestBody UserDTO userDTO){
-//        return ResponseEntity.ok(userService.update(userDTO));
-//    }
+    @PutMapping
+    ResponseEntity<UserDTO> update(@RequestBody UserDTO userDTO){
+        return ResponseEntity.ok(userService.update(userDTO));
+    }
 
     @GetMapping("/{id}")
     ResponseEntity<UserDTO> getUserById(@PathVariable UUID id){
