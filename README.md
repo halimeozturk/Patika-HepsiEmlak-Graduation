@@ -135,11 +135,11 @@ Purchase: http://localhost:8088
 User: http://localhost:8085  
 
 ### Database Bilgileri
-Advert Database: http://localhost:5432/advert
-User Database: http://localhost:5432/user
-Email Database: http://localhost:5432/email
-Payment Database: http://localhost:5432/payment
-Purchase Database: http://localhost:5432/purchase
+Advert Database: http://localhost:5432/advert  
+User Database: http://localhost:5432/user  
+Email Database: http://localhost:5432/email  
+Payment Database: http://localhost:5432/payment  
+Purchase Database: http://localhost:5432/purchase  
 
 
 ## UNIT TEST
